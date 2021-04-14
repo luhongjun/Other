@@ -22,6 +22,8 @@ gRPC 默认使用 Protocol buffers，这是 Google 开源的一套成熟的结�
 
 ## 实现 gRPC 通信 （Golang 实现示例）
 
+详细可参阅[Protocol Buffer Basics: Go](https://developers.google.com/protocol-buffers/docs/gotutorial)
+
 1. 编写 `*.proto` 文件
 
 ```api.proto
@@ -35,6 +37,12 @@ message SearchRequest {
   int32 page_number = 2;
   int32 result_per_page = 3;
 }
+```
+
+2. 服务端实现 gRPC 接口
+
+``` 
+
 ```
 
 

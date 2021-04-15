@@ -24,7 +24,7 @@ gRPC 默认使用 Protocol buffers，这是 Google 开源的一套成熟的结�
 
 详细可参阅[Protocol Buffer Basics: Go](https://developers.google.com/protocol-buffers/docs/gotutorial)
 
-1. 编写 `*.proto` 文件
+1. 编写`*.proto`文件
 
 ```api.proto
 // 需要以 proto3 的语法来解析此文件
@@ -40,6 +40,8 @@ message SearchRequest {
 ```
 
 2. 服务端实现 gRPC 接口
+
+服务端拿到这份`*.proto`文件后，需要借助 proto 编译器转换成为相关的 go 文件
 
 ``` 
 

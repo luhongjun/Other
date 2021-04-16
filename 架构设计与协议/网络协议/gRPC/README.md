@@ -144,7 +144,26 @@ Parse PROTO_FILES and generate output based on the options given:
 
 等`id-card.proto`文件编译完后，默认地（如果不指定 OUT_DIR），会在当前目录下生成三个文件：
 
-a. `id_card.pb.go`文件：此文件是供客户端（接入）、服务端（注册）的 go 文件
+a. `id_card.pb.go`文件
+
+值得关注的是，当前 go 文件的包名即是`id-card.proto`文件的包声明，还有两个比较重要的函数：
+``` 
+//此函数是给【服务端】调用的，注册gRPC的服务器。
+//- 函数第一入参是依赖于外部官方的"gRPC.Server"（链接：https://pkg.go.dev/google.golang.org/grpc?readme=expanded#Server）。
+//
+func RegisterIDCardServiceServer(s *grpc.Server, srv IDCardServiceServer) {
+	s.RegisterService(&_IDCardService_serviceDesc, srv)
+}
+//此方法是给【客户端】调用的，生成gRPC的客户端连接，它的入参依赖于"gRPC库-ClientConn"（链接：https://pkg.go.dev/google.golang.org/grpc?readme=expanded#ClientConn）
+//
+func NewIDCardServiceClient(cc *grpc.ClientConn) IDCardServiceClient {
+	return &iDCardServiceClient{cc}
+}
+
+
+
+```
+    
 b. `id_card.pb.gw.go`文件：此文件是 gateway 文件
 c. `id_card.swagger.json`文件：生成 swagger
 

@@ -1,0 +1,493 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "proto/id_card_proto/id_card/id_card.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/logs": {
+      "get": {
+        "summary": "获取刷证log\r\n@author wangjm05",
+        "operationId": "GetLogs",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/id_cardGetLogsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "project_id",
+            "description": "项目ID\r\n@required.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "id_number",
+            "description": "证件号\r\n@required.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "IDCardService"
+        ]
+      }
+    },
+    "/v1/matched_captures": {
+      "get": {
+        "summary": "获取人脸匹配结果\r\n@author wangjm05",
+        "operationId": "GetMatchedCaptures",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/id_cardGetMatchedCapturesResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "project_id",
+            "description": "项目ID\r\n@required.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "id_number",
+            "description": "证件号\r\n@required.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "IDCardService"
+        ]
+      }
+    },
+    "/v1/records": {
+      "get": {
+        "summary": "获取记录列表\r\n@author wangjm05",
+        "operationId": "GetRecords",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/id_cardGetRecordsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "project_id",
+            "description": "项目ID\r\n@required.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "id_number",
+            "description": "证件号.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "description": "姓名.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "start_date",
+            "description": "起始日期，比如：2020-01-01.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "end_date",
+            "description": "截止日期，比如：2020-12-31.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "source_type",
+            "description": "认证来源（1人证一体机 2小程序核验 3手动上传 4外部导入）.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page",
+            "description": "页码，默认1.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "page_size",
+            "description": "每页条数，默认10.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "IDCardService"
+        ]
+      }
+    },
+    "/v1/upload_record": {
+      "post": {
+        "summary": "添加认证记录\r\n@author wangjm05",
+        "operationId": "UploadRecord",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/id_cardUploadRecordResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/id_cardUploadRecordRequest"
+            }
+          }
+        ],
+        "tags": [
+          "IDCardService"
+        ]
+      }
+    },
+    "/v1/upload_record_by_machine": {
+      "post": {
+        "summary": "添加认证记录（人证机）\r\n@author wangjm05",
+        "operationId": "UploadRecordByMachine",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/id_cardUploadRecordResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/id_cardUploadRecordByMachineRequest"
+            }
+          }
+        ],
+        "tags": [
+          "IDCardService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "commonPager": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "string",
+          "format": "int64",
+          "title": "页码"
+        },
+        "page_size": {
+          "type": "string",
+          "format": "int64",
+          "title": "页数"
+        },
+        "total_rows": {
+          "type": "string",
+          "format": "int64",
+          "title": "总行数"
+        }
+      }
+    },
+    "id_cardGetLogsResponse": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "string",
+          "format": "int64",
+          "title": "刷证次数\r\n@required"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/id_cardRecord"
+          },
+          "title": "记录列表\r\n@required"
+        }
+      }
+    },
+    "id_cardGetMatchedCapturesResponse": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "string",
+          "format": "int64",
+          "title": "匹配条数\r\n@required"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/id_cardMatchedCapture"
+          },
+          "title": "匹配列表\r\n@required"
+        }
+      }
+    },
+    "id_cardGetRecordsResponse": {
+      "type": "object",
+      "properties": {
+        "pager": {
+          "$ref": "#/definitions/commonPager",
+          "title": "分页信息\r\n@required"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/id_cardRecord"
+          },
+          "title": "记录列表\r\n@required"
+        }
+      }
+    },
+    "id_cardMatchedCapture": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "title": "记录唯一标识\r\n@required"
+        },
+        "captured_at": {
+          "type": "string",
+          "format": "int64",
+          "title": "图片抓拍时间（时间戳）\r\n@required"
+        },
+        "similarity": {
+          "type": "integer",
+          "format": "int32",
+          "title": "百分比相似度，范围：0~100\r\n@required"
+        },
+        "level": {
+          "type": "integer",
+          "format": "int32",
+          "title": "友好化相似度（1低 2中 3高）\r\n@required"
+        },
+        "face_image_url": {
+          "type": "string",
+          "title": "人脸图片URL\r\n@required"
+        },
+        "background_image_url": {
+          "type": "string",
+          "title": "背景图片URL\r\n@required"
+        },
+        "compare_image_url": {
+          "type": "string",
+          "title": "对比图片URL\r\n@required"
+        },
+        "short_video_url": {
+          "type": "string",
+          "title": "短视频URL\r\n@required"
+        },
+        "person_id": {
+          "type": "string",
+          "title": "唯一人脸标识\r\n@required"
+        }
+      }
+    },
+    "id_cardRecord": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "title": "记录唯一标识\r\n@required"
+        },
+        "name": {
+          "type": "string",
+          "title": "姓名\r\n@required"
+        },
+        "id_number": {
+          "type": "string",
+          "title": "证件号\r\n@required"
+        },
+        "sex": {
+          "type": "integer",
+          "format": "int32",
+          "title": "性别（-1未知 0男 1女）\r\n@required"
+        },
+        "id_image_url": {
+          "type": "string",
+          "title": "身份证头像URL\r\n@required"
+        },
+        "face_image_url": {
+          "type": "string",
+          "title": "现场核验头像URL\r\n@required"
+        },
+        "source_type": {
+          "type": "integer",
+          "format": "int32",
+          "title": "认证来源（1人证一体机 2小程序核验 3手动上传 4外部导入）\r\n@required"
+        },
+        "verify_time": {
+          "type": "string",
+          "title": "认证时间，比如：2020-01-01 08:00:00\r\n@required"
+        }
+      }
+    },
+    "id_cardUploadRecordByMachineRequest": {
+      "type": "object",
+      "properties": {
+        "device_id": {
+          "type": "string",
+          "title": "人证一体机设备编号\r\n@required"
+        },
+        "name": {
+          "type": "string",
+          "title": "姓名\r\n@required"
+        },
+        "sex": {
+          "type": "integer",
+          "format": "int32",
+          "title": "性别（-1未知 0男 1女）\r\n@required"
+        },
+        "id_number": {
+          "type": "string",
+          "title": "证件号\r\n@required"
+        },
+        "id_image_base64": {
+          "type": "string",
+          "title": "身份证头像Base64\r\n@required"
+        },
+        "face_image_base64": {
+          "type": "string",
+          "title": "现场核验头像Base64\r\n@required"
+        },
+        "verify_time": {
+          "type": "string",
+          "format": "int64",
+          "title": "认证时间，秒级时间戳，比如：1552720373\r\n@required"
+        },
+        "verify_result": {
+          "type": "integer",
+          "format": "int32",
+          "title": "认证结果（0成功 1失败）\r\n@required"
+        },
+        "verify_score": {
+          "type": "number",
+          "format": "float",
+          "title": "比对分值，人脸相似度[0,1]\r\n@required"
+        }
+      }
+    },
+    "id_cardUploadRecordRequest": {
+      "type": "object",
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "title": "项目ID\r\n@required"
+        },
+        "device_id": {
+          "type": "string",
+          "title": "设备ID（后台手工上传时，设备ID为：user_code@@org_code）\r\n@required"
+        },
+        "name": {
+          "type": "string",
+          "title": "姓名\r\n@required"
+        },
+        "id_number": {
+          "type": "string",
+          "title": "证件号\r\n@required"
+        },
+        "sex": {
+          "type": "integer",
+          "format": "int32",
+          "title": "性别（-1未知 0男 1女）\r\n@required"
+        },
+        "id_image_url": {
+          "type": "string",
+          "title": "身份证头像url，url和base64选填一个，2个都存在时，使用base64"
+        },
+        "id_image_base64": {
+          "type": "string",
+          "title": "身份证头像Base64"
+        },
+        "face_image_url": {
+          "type": "string",
+          "title": "现场核验头像url，url和base64选填一个，2个都存在时，使用base64"
+        },
+        "face_image_base64": {
+          "type": "string",
+          "title": "现场核验头像Base64"
+        },
+        "verify_time": {
+          "type": "string",
+          "format": "int64",
+          "title": "认证时间，秒级时间戳，比如：1552720373"
+        },
+        "verify_result": {
+          "type": "integer",
+          "format": "int32",
+          "title": "认证结果（0成功 1失败）"
+        },
+        "verify_score": {
+          "type": "number",
+          "format": "float",
+          "title": "比对分值，人脸相似度[0,1]"
+        },
+        "source_type": {
+          "type": "integer",
+          "format": "int32",
+          "title": "认证来源（1人证一体机 2小程序核验 3手动上传 4外部导入）\r\n@required"
+        }
+      }
+    },
+    "id_cardUploadRecordResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "format": "int64",
+          "title": "错误码\r\n@required"
+        },
+        "message": {
+          "type": "string",
+          "title": "错误信息\r\n@required"
+        }
+      }
+    }
+  }
+}

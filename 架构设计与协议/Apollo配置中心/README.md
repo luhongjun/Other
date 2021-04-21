@@ -60,3 +60,12 @@ Apollo 整体架构如下图：
 应用可以直接读取到公共组件的配置namespace，如DAL，RPC等；
 
 应用也可以通过继承公共组件的配置namespace来对公共组件的配置做调整，如DAL的初始数据库连接数；
+
+
+## Apollo 应用
+
+- [Golang 实现 Apollo](Golang实现与应用.md)
+
+## 生产部署
+
+- [Apollo 分布式部署指南](https://ctripcorp.github.io/apollo/#/zh/deployment/distributed-deployment-guide)

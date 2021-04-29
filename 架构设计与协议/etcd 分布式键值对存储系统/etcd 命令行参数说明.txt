@@ -22,23 +22,23 @@ Demo：
 
 member flags:
 
-	--name 'default'
+	--name 'default'                    定义易于阅读的名称
 		human-readable name for this member.
-	--data-dir '${name}.etcd'
+	--data-dir '${name}.etcd'           指定存放KV数据的目录地址
 		path to the data directory.
 	--wal-dir ''
 		path to the dedicated wal directory.
 	--snapshot-count '100000'
 		number of committed transactions to trigger a snapshot to disk.
-	--heartbeat-interval '100'
+	--heartbeat-interval '100'          心跳检测间隔
 		time (in milliseconds) of a heartbeat interval.
-	--election-timeout '1000'
+	--election-timeout '1000'           选举投票的超时时长
 		time (in milliseconds) for an election to timeout. See tuning documentation for details.
 	--initial-election-tick-advance 'true'
 		whether to fast-forward initial election ticks on boot for faster election.
-	--listen-peer-urls 'http://localhost:2380'
+	--listen-peer-urls 'http://localhost:2380'          用于同伴应答的监听地址
 		list of URLs to listen on for peer traffic.
-	--listen-client-urls 'http://localhost:2379'
+	--listen-client-urls 'http://localhost:2379'        用于客户端应答的监听地址
 		list of URLs to listen on for client traffic.
 	--max-snapshots '5'
 		maximum number of snapshot files to retain (0 is unlimited).
@@ -52,11 +52,11 @@ member flags:
 		maximum number of operations permitted in a transaction.
 	--max-request-bytes '1572864'
 		maximum client request size in bytes the server will accept.
-	--grpc-keepalive-min-time '5s'
+	--grpc-keepalive-min-time '5s'          gRPC保持连接的最小时长
 		minimum duration interval that a client should wait before pinging server.
 	--grpc-keepalive-interval '2h'
 		frequency duration of server-to-client ping to check if a connection is alive (0 to disable).
-	--grpc-keepalive-timeout '20s'
+	--grpc-keepalive-timeout '20s'          gRPC保持连接的超时时长
 		additional duration of wait before closing a non-responsive connection (0 to disable).
 
 clustering flags:

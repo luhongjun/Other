@@ -2,11 +2,32 @@
 
 etcd 是 CoreOS 团队于2013年6月发起的开源项目，它的目标是构建一个高可用的*分布式*键值(key-value)数据库。
 
+"etcd"这个名字源于两个想法，即 unix "/etc" 文件夹和分布式系统"d"istibuted。 "/etc" 文件夹为单个系统存储配置数据的地方，而 etcd 存储大规模分布式系统的配置信息。因此，"d"istibuted 的 "/etc" ，是为 "etcd"；
+
 etcd 内部采用 raft 协议为一致性算法。通过分布式锁，leader 选举和写屏障(write barriers)来实现可靠的分布式协作。etcd 集群是为高可用，持久性数据存储和检索而准备。
 
-[etcd](https://github.com/etcd-io/etcd)基于 Go 语言实现。
+[etcd](https://github.com/etcd-io/etcd) 基于 Go 语言实现。
 
-这里有[etcd 中文版文档](https://doczhcn.gitbook.io/etcd/)
+- [etcd 中文版文档](https://doczhcn.gitbook.io/etcd/)
+
+
+## [理解数据模型](https://doczhcn.gitbook.io/etcd/index/index-2/data_model)
+
+etcd 设计用于可靠存储不频繁更新的数据，并提供可靠的观察查询。etcd 暴露键值对的先前版本来支持不昂贵的快速和观察历史事件("time travel queries")。对于这些使用场景，持久化，多版本，并发控制的数据模型是非常适合的。
+
+ectd 使用多版本持久化键值存储来存储数据。当键值对的值被新的数据替代时，持久化键值存储保存先前版本的键值对。键值存储事实上是不可变的;它的操作不会就地更新结构，替代的是总是生成一个新的更新后的结构。在修改之后，key的所有先前版本还是可以访问和观察的。为了防止随着时间的过去为了维护老版本导致数据存储无限增长，存储应该压缩来脱离被替代的数据的最旧的版本。
+
+---------------------
+
+关于 etcd ，需要了解如下术语的含义：
+
+- Node / 节点：raft 状态机的一个实例。它有唯一标识，并内部记录其他节点的发展，如果它是leader。
+- Member / 成员：etcd 的一个实例。它承载一个 node/节点，并为client/客户端提供服务。
+- Cluster / 集群：由多个 member/成员组成。每个成员的节点遵循 raft 一致性协议来复制日志。集群从成员中接收提案，提交他们并应用到本地存储
+- Peer / 同伴：指的是同一个集群中的其他成员；
+- Proposal / 提议：指的是一个需要完成 raft 协议的请求(例如写请求，配置修改请求)；
+- Client / 客户端：集群 HTTP API的调用者
+
 
 ## etcd 应用场景
 
@@ -34,19 +55,23 @@ etcd 比较多的应用场景是用于服务发现，服务发现(Service Discov
 
 ## 使用
 
+采用"服务端/客户端"的交互方式
+
+### 服务端
+
 - [etcd 命令行参数说明](etcd%20命令行参数说明.txt)
 
+我们可以进行 etcd 集群以提升服务发现的可靠性，假设我们要搭建以下三台 etcd 服务器的集群：
+
+| 名字 | 地址 | 主机 |
+| --- | --- | --- |
+| infra0 | 10.0.1.10 | infra0.example.com |
+| infra1 | 10.0.1.11 | infra1.example.com |
+| infra2 | 10.0.1.12 | infra2.example.com |
+
+
+
+### 客户端
 - [etcdctl 命令行参数说明](etcdctl%20命令行参数说明.txt)
 
 etcdctl 是一个和 etcd 服务器交互的命令行工具。这里描述的概念也适用于 gRPC API 或者客户端类库 API。
-
-
-
-
-
-
-etcd 在键的组织上采用了层次化的空间结构(类似于文件系统中目录的概念)，用户指定的键可以为单独的名字，如:testkey，此时实际上放在根目录/下面，也可以为指定目录结构，如/cluster1/node2/testkey，则将创建相应的目录结构。
-
-``` 
-
-```

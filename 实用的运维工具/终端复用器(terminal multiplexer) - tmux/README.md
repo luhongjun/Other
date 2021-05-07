@@ -20,8 +20,8 @@ sudo make install
 ```  
 
 ## 相关资料
-[Tmux 使用教程 - 阮一峰](http://www.ruanyifeng.com/blog/2019/10/tmux.html)
-  
+- [Tmux 使用教程 - 阮一峰](http://www.ruanyifeng.com/blog/2019/10/tmux.html)
+- [tmux 中文文档](https://wiki.archlinux.org/title/Tmux_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)
 
 ## 命令
 
@@ -43,7 +43,7 @@ sudo make install
 | 分离会话，并退出当前Tmux窗口 | Ctrl+b d | tmux detach |
 | 杀死会话 | / | tmux kill-session -t <session-name> |
 | 切换会话| / | tmux switch -t <session-name> |
-| 重命名会话 | Ctrl+b $ | tmux rename-session -t <session-new-name> |
+| 重命名会话 | Ctrl+b $ | tmux rename-session -t <old-session-name> <session-new-name> |
 
 
 - 窗口管理

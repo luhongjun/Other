@@ -1,9 +1,12 @@
+// 声明使用的是 proto3 的语法
 syntax = "proto3";
 
+// 声明当前包名
 package id_card;
 
-import "google/api/annotations.proto";
-import "common/common.proto";
+// 导入包
+import "message_definition.proto";
+import "google/protobuf/any.proto";
 
 service IDCardService {
     rpc GetRecords(GetRecordsRequest) returns (GetRecordsResponse) {
@@ -11,226 +14,20 @@ service IDCardService {
             get: "/v1/records",
         };
     }
+}
 
-    rpc GetLogs(GetLogsRequest) returns (GetLogsResponse) {
-        option (google.api.http) = {
-            get: "/v1/logs",
-        };
+message ErrorStatus {
+    //在 proto3 中，标量数值类型的重复字段默认会使用 packed 压缩编码。
+    string message = 1;
+
+    //【Any类型】
+    //Any类型消息允许你在没有指定他们的.proto定义的情况下使用消息作为一个嵌套类型。
+    //一个Any类型包括一个可以被序列化bytes类型的任意消息，以及一个URL作为一个全局标识符和解析消息类型。
+    //为了使用Any类型，你需要导入import google/protobuf/any.proto
+    repeated google.protobuf.Any details = 2;
+
+    oneof return_message {
+        string error_message = 4;
+        string success_message = 9;
     }
-
-    rpc GetMatchedCaptures(GetMatchedCapturesRequest) returns (GetMatchedCapturesResponse) {
-        option (google.api.http) = {
-            get: "/v1/matched_captures",
-        };
-    }
-
-    rpc UploadRecord(UploadRecordRequest) returns (UploadRecordResponse) {
-        option (google.api.http) = {
-            post: "/v1/upload_record",
-            body: "*"
-        };
-    }
-
-    rpc UploadRecordByMachine(UploadRecordByMachineRequest) returns (UploadRecordResponse) {
-        option (google.api.http) = {
-            post: "/v1/upload_record_by_machine",
-            body: "*"
-        };
-    }
-}
-
-message GetRecordsRequest {
-    // 项目ID
-    // @required
-    string project_id = 1;
-    // 证件号
-    string id_number = 2;
-    // 姓名
-    string name = 3;
-    // 起始日期，比如：2020-01-01
-    string start_date = 4;
-    // 截止日期，比如：2020-12-31
-    string end_date = 5;
-    // 认证来源（1人证一体机 2小程序核验 3手动上传 4外部导入）
-    int32 source_type = 6;
-    // 页码，默认1
-    int64 page = 7;
-    // 每页条数，默认10
-    int64 page_size = 8;
-}
-
-message GetRecordsResponse {
-    // 分页信息
-    // @required
-    common.Pager pager = 1;
-    // 记录列表
-    // @required
-    repeated Record list = 2;
-}
-
-message Record {
-    // 记录唯一标识
-    // @required
-    string uuid = 1;
-    // 姓名
-    // @required
-    string name = 2;
-    // 证件号
-    // @required
-    string id_number = 3;
-    // 性别（-1未知 0男 1女）
-    // @required
-    int32 sex = 4;
-    // 身份证头像URL
-    // @required
-    string id_image_url = 5;
-    // 现场核验头像URL
-    // @required
-    string face_image_url = 6;
-    // 认证来源（1人证一体机 2小程序核验 3手动上传 4外部导入）
-    // @required
-    int32 source_type = 7;
-    // 认证时间，比如：2020-01-01 08:00:00
-    // @required
-    string verify_time = 8;
-}
-
-message GetLogsRequest {
-    // 项目ID
-    // @required
-    string project_id = 1;
-    // 证件号
-    // @required
-    string id_number = 2;
-}
-
-message GetLogsResponse {
-    // 刷证次数
-    // @required
-    int64 count = 1;
-    // 记录列表
-    // @required
-    repeated Record list = 2;
-}
-
-message GetMatchedCapturesRequest {
-    // 项目ID
-    // @required
-    string project_id = 1;
-    // 证件号
-    // @required
-    string id_number = 2;
-}
-
-message GetMatchedCapturesResponse {
-    // 匹配条数
-    // @required
-    int64 count = 1;
-    // 匹配列表
-    // @required
-    repeated MatchedCapture list = 2;
-}
-
-message MatchedCapture {
-    // 记录唯一标识
-    // @required
-    string uuid = 1;
-    // 图片抓拍时间（时间戳）
-    // @required
-    int64 captured_at = 2;
-    // 百分比相似度，范围：0~100
-    // @required
-    int32 similarity = 3;
-    // 友好化相似度（1低 2中 3高）
-    // @required
-    int32 level = 4;
-    // 人脸图片URL
-    // @required
-    string face_image_url = 5;
-    // 背景图片URL
-    // @required
-    string background_image_url = 6;
-    // 对比图片URL
-    // @required
-    string compare_image_url = 7;
-    // 短视频URL
-    // @required
-    string short_video_url = 8;
-    // 唯一人脸标识
-    // @required
-    string person_id = 9;
-}
-
-message UploadRecordRequest {
-    // 项目ID
-    // @required
-    string project_id = 1;
-    // 设备ID（后台手工上传时，设备ID为：user_code@@org_code）
-    // @required
-    string device_id = 2;
-    // 姓名
-    // @required
-    string name = 3;
-    // 证件号
-    // @required
-    string id_number = 4;
-    // 性别（-1未知 0男 1女）
-    // @required
-    int32 sex = 5;
-    // 身份证头像url，url和base64选填一个，2个都存在时，使用base64
-    string id_image_url = 6;
-    // 身份证头像Base64
-    string id_image_base64 = 7;
-    // 现场核验头像url，url和base64选填一个，2个都存在时，使用base64
-    string face_image_url = 8;
-    // 现场核验头像Base64
-    string face_image_base64 = 9;
-    // 认证时间，秒级时间戳，比如：1552720373
-    int64 verify_time = 10;
-    // 认证结果（0成功 1失败）
-    int32 verify_result = 11;
-    // 比对分值，人脸相似度[0,1]
-    float verify_score = 12;
-    // 认证来源（1人证一体机 2小程序核验 3手动上传 4外部导入）
-    // @required
-    int32 source_type = 13;
-}
-
-message UploadRecordByMachineRequest {
-    // 人证一体机设备编号
-    // @required
-    string device_id = 1;
-    // 姓名
-    // @required
-    string name = 2;
-    // 性别（-1未知 0男 1女）
-    // @required
-    int32 sex = 3;
-    // 证件号
-    // @required
-    string id_number = 4;
-    // 身份证头像Base64
-    // @required
-    string id_image_base64 = 5;
-    // 现场核验头像Base64
-    // @required
-    string face_image_base64 = 6;
-    // 认证时间，秒级时间戳，比如：1552720373
-    // @required
-    int64 verify_time = 7;
-    // 认证结果（0成功 1失败）
-    // @required
-    int32 verify_result = 8;
-    // 比对分值，人脸相似度[0,1]
-    // @required
-    float verify_score = 9;
-}
-
-message UploadRecordResponse {
-    // 错误码
-    // @required
-    int64 code = 1;
-    // 错误信息
-    // @required
-    string message = 2;
 }

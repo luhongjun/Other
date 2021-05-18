@@ -3,15 +3,23 @@
 ## gRPC 是什么？
 在 gRPC 里客户端应用可以像调用本地对象一样直接调用另一台不同的机器上服务端应用的方法，使得您能够更容易地创建分布式应用和服务。与许多 RPC 系统类似，gRPC 也是基于以下理念：定义一个服务，指定其能够被远程调用的方法（包含参数和返回类型）。在服务端实现这个接口，并运行一个 gRPC 服务器来处理客户端调用。在客户端拥有一个存根能够像服务端一样的方法。
 
+![gRPC 客户端服务端交互图](gRPC%20客户端服务端交互图.png)
+
 使用 gRPC 通信的大致流程如下：
 1. 通过 `protocol buffers` 来定义通信双方（即客户端&服务端）的接口格式和数据类型；
 2. 服务端根据 `protocol buffers` 文件实现接口逻辑，并开放接口及指定端口；
-3. 客户端根据 `protocol buffers` 文件按需调用
+3. 客户端根据 `protocol buffers` 文件定义的接口，按需调用
 
 ## 使用 Protocol buffers
 gRPC 默认使用 Protocol buffers，这是 Google 开源的一套成熟的结构数据序列化机制（当然也可以使用其他数据格式如 JSON）。
 
-可以在[Protocol Buffer3 官方文档](https://developers.google.com/protocol-buffers/docs/proto3)参阅更多`.proto`文件的语法。
+Protocol buffers 在 gitlab 的地址：https://github.com/protocolbuffers/protobuf ，我们可以看到官方定义的一些[内置的 proto 文件](https://github.com/protocolbuffers/protobuf/blob/master/src/google/protobuf)
+
+另外，关于 proto 的一些语法，也可以在[Protocol Buffer3 官方文档](https://developers.google.com/protocol-buffers/docs/proto3)参阅；
+
+英文理解有障碍的话，可以参阅：
+- [博客中文翻译 - Proto3语法指南](https://www.cnblogs.com/tohxyblog/p/8974763.html)
+- [博客中文翻译 - Proto2语法指南](https://blog.csdn.net/qq_22660775/article/details/89044538)
 
 *gRPC vs Restful API*
 
@@ -24,148 +32,24 @@ gRPC 默认使用 Protocol buffers，这是 Google 开源的一套成熟的结�
 
 详细可参阅[Protocol Buffer Basics: Go](https://developers.google.com/protocol-buffers/docs/gotutorial)
 
-1. 编写[`id-card.proto`文件](id_card.proto)
-
-```
-//需要以 proto3 的语法来解析此文件
-syntax = "proto3";
-//当前包名
-package id_card
-//声明 SearchRequest 消息体
-message SearchRequest {
-  string query = 1;
-  int32 page_number = 2;
-  int32 result_per_page = 3;
-}
-```
+1. 双方协定并编写[`id-card.proto`文件](id_card.proto)
 
 2. 服务端实现 gRPC 接口
 
 - 2.1 服务端拿到这份`id-card.proto`文件后，需要借助 protoc 编译器转换成为相关的 go 文件以供调用
 
-go proto 的编译器是`protoc`，可以通过以下命令安装，此外，还需要安装`protoc`、`protoc-gen-grpc-gateway`、`protoc-gen-swagger`：
+go proto 的编译器是`protoc`，可以通过以下命令安装：
 ``` 
 go install google.golang.org/protobuf/cmd/protoc-gen-go
 ```
 
-然后，我们使用[protoc]()(详细也可以通过`protoc -help`来了解指令用法)对`api.proto`文件进行编译，执行：
-``` 
-protoc -I. -I./vendor -I./proto/ykproto  --grpc-gateway_out=logtostderr=true:. ./proto/id_card_proto/id_card/id_card.proto
-```
---------------------
-protoc 的用法具体如下：
-``` 
-root@SZ-PC-00517:/# protoc
-Usage: protoc [OPTION] PROTO_FILES
-Parse PROTO_FILES and generate output based on the options given:
-  -IPATH, --proto_path=PATH   Specify the directory in which to search for
-                              imports.  May be specified multiple times;
-                              directories will be searched in order.  If not
-                              given, the current working directory is used.
-    指定要在其中搜索导入的目录。可以多次指定；将按顺序搜索目录。如果未给定，则使用当前工作目录。
-  --version                   Show version info and exit.
-  -h, --help                  Show this text and exit.
-  --encode=MESSAGE_TYPE       Read a text-format message of the given type
-                              from standard input and write it in binary
-                              to standard output.  The message type must
-                              be defined in PROTO_FILES or their imports.
-  --decode=MESSAGE_TYPE       Read a binary message of the given type from
-                              standard input and write it in text format
-                              to standard output.  The message type must
-                              be defined in PROTO_FILES or their imports.
-  --decode_raw                Read an arbitrary protocol message from
-                              standard input and write the raw tag/value
-                              pairs in text format to standard output.  No
-                              PROTO_FILES should be given when using this
-                              flag.
-  --descriptor_set_in=FILES   Specifies a delimited list of FILES
-                              each containing a FileDescriptorSet (a
-                              protocol buffer defined in descriptor.proto).
-                              The FileDescriptor for each of the PROTO_FILES
-                              provided will be loaded from these
-                              FileDescriptorSets. If a FileDescriptor
-                              appears multiple times, the first occurrence
-                              will be used.
-  -oFILE,                     Writes a FileDescriptorSet (a protocol buffer,
-    --descriptor_set_out=FILE defined in descriptor.proto) containing all of
-                              the input files to FILE.
-  --include_imports           When using --descriptor_set_out, also include
-                              all dependencies of the input files in the
-                              set, so that the set is self-contained.
-  --include_source_info       When using --descriptor_set_out, do not strip
-                              SourceCodeInfo from the FileDescriptorProto.
-                              This results in vastly larger descriptors that
-                              include information about the original
-                              location of each decl in the source file as
-                              well as surrounding comments.
-  --dependency_out=FILE       Write a dependency output file in the format
-                              expected by make. This writes the transitive
-                              set of input file paths to FILE
-  --error_format=FORMAT       Set the format in which to print errors.
-                              FORMAT may be 'gcc' (the default) or 'msvs'
-                              (Microsoft Visual Studio format).
-  --print_free_field_numbers  Print the free field numbers of the messages
-                              defined in the given proto files. Groups share
-                              the same field number space with the parent
-                              message. Extension ranges are counted as
-                              occupied fields numbers.
-
-  --plugin=EXECUTABLE         Specifies a plugin executable to use.
-                              Normally, protoc searches the PATH for
-                              plugins, but you may specify additional
-                              executables not in the path using this flag.
-                              Additionally, EXECUTABLE may be of the form
-                              NAME=PATH, in which case the given plugin name
-                              is mapped to the given executable even if
-                              the executable's own name differs.
-  --cpp_out=OUT_DIR           Generate C++ header and source.
-  --csharp_out=OUT_DIR        Generate C# source file.
-  --java_out=OUT_DIR          Generate Java source file.
-  --js_out=OUT_DIR            Generate JavaScript source.
-  --objc_out=OUT_DIR          Generate Objective C header and source.
-  --php_out=OUT_DIR           Generate PHP source file.
-  --python_out=OUT_DIR        Generate Python source file.
-  --ruby_out=OUT_DIR          Generate Ruby source file.
-  @<filename>                 Read options and filenames from file. If a
-                              relative file path is specified, the file
-                              will be searched in the working directory.
-                              The --proto_path option will not affect how
-                              this argument file is searched. Content of
-                              the file will be expanded in the position of
-                              @<filename> as in the argument list. Note
-                              that shell expansion is not applied to the
-                              content of the file (i.e., you cannot use
-                              quotes, wildcards, escapes, commands, etc.).
-                              Each line corresponds to a single argument,
-                              even if it contains spaces.
-```
---------------------
-
-
-等`id-card.proto`文件编译完后，默认地（如果不指定 OUT_DIR），会在当前目录下生成三个文件：
-
-a. `id_card.pb.go`文件
-
-值得关注的是，当前 go 文件的包名即是`id-card.proto`文件的包声明，还有两个比较重要的函数：
-``` 
-//此函数是给【服务端】调用的，注册gRPC的服务器。
-//- 函数第一入参是依赖于外部官方的"gRPC.Server"（链接：https://pkg.go.dev/google.golang.org/grpc?readme=expanded#Server）。
-//
-func RegisterIDCardServiceServer(s *grpc.Server, srv IDCardServiceServer) {
-	s.RegisterService(&_IDCardService_serviceDesc, srv)
-}
-//此方法是给【客户端】调用的，生成gRPC的客户端连接，它的入参依赖于"gRPC库-ClientConn"（链接：https://pkg.go.dev/google.golang.org/grpc?readme=expanded#ClientConn）
-//
-func NewIDCardServiceClient(cc *grpc.ClientConn) IDCardServiceClient {
-	return &iDCardServiceClient{cc}
-}
+然后，我们使用[protoc 指令](Protoc(Protocol%20Compiler).md)对`api.proto`文件进行编译,编译后会得到一个文件`.pb.go`;
 
 
 
-```
-    
-b. `id_card.pb.gw.go`文件：此文件是 gateway 文件
-c. `id_card.swagger.json`文件：生成 swagger
+
+
+此外，还需要安装`protoc-gen-grpc-gateway`、`protoc-gen-swagger`：
 
 
 

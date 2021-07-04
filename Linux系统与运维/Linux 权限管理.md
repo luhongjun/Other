@@ -31,8 +31,8 @@ ACL，是 Access Control List（访问控制列表）的缩写，在 Linux 系�
 
 - `getfacl` 查看文件或目录当前设定的 ACL 权限信息
 ```
-root@SZ-PC-00517:/webser/golang-project/src/git.myscrm.cn/aiot# getfacl id-card
-# file: id-card
+root@SZ-PC-00517:/webser/golang-project/src/# getfacl my-card-job
+# file: my-card-job
 # owner: root
 # group: root
 user::rwx

@@ -59,7 +59,7 @@ etcd 比较多的应用场景是用于服务发现，服务发现(Service Discov
 
 ### 服务端
 
-- [etcd 命令行参数说明](etcd%20命令行参数说明.txt)
+- [etcd 命令行参数说明](etcd 命令行参数说明.txt)
 
 我们可以进行 etcd 集群以提升服务发现的可靠性，假设我们要搭建以下三台 etcd 服务器的集群：
 
@@ -72,6 +72,6 @@ etcd 比较多的应用场景是用于服务发现，服务发现(Service Discov
 
 
 ### 客户端
-- [etcdctl 命令行参数说明](etcdctl%20命令行参数说明.txt)
+- [etcdctl 命令行参数说明](etcdctl 命令行参数说明.txt)
 
 etcdctl 是一个和 etcd 服务器交互的命令行工具。这里描述的概念也适用于 gRPC API 或者客户端类库 API。

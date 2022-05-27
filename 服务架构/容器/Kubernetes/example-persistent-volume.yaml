@@ -1,0 +1,63 @@
+# PV 作为存储资源，主要包括存储能力、访问模式、存储类型、回收策略等关键信息
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name:  pv1
+spec:
+  capacity:       # 存储能力
+    storage: 1Gi
+  accessModes:    # 访问模式
+    # ReadWriteOnce（RWO）：读写权限，但是只能被单个节点挂载
+    # ReadOnlyMany（ROX）：只读权限，可以被多个节点挂载
+    # ReadWriteMany（RWX）：读写权限，可以被多个节点挂载
+    - ReadWriteOnce
+  # 回收策略有三种：
+  # Retain（保留）- 保留数据，需要管理员手工清理数据
+  # Recycle（回收）- 清除 PV 中的数据，效果相当于执行 rm -rf /thevoluem/*
+  # Delete（删除）- 与 PV 相连的后端存储完成 volume 的删除操作，当然这常见于云服务商的存储服务，比如 ASW EBS
+  persistentVolumeReclaimPolicy: Recycle
+  nfs:
+    path: /data/k8s
+    server: 10.151.30.57
+---
+## 声明Deployment，负载均衡三个Pod副本（镜像：Nginx）
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nfs-pvc
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nfs-pvc
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.7.9
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: web
+          volumeMounts:
+            - name: www
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: www
+          persistentVolumeClaim:
+            claimName: pvc2-nfs
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nfs-pvc
+  labels:
+    app: nfs-pvc
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: web
+  selector:
+    app: nfs-pvc

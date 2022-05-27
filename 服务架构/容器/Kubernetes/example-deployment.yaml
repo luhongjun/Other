@@ -1,0 +1,26 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  labels:
+    k8s-app: nginx-demo
+spec:
+  replicas: 3       # 指定Pod副本数量，默认为1
+  minReadySeconds: 5  # Kubernetes在等待设置的时间后才进行升级
+  strategy:         # 声明滚动升级的策略
+    type: RollingUpdate # 策略类型：RollingUpdate、Recreate
+    rollingUpdate:
+      # 例如，maxSurage=1，replicas=5,则表示Kubernetes会先启动1一个新的Pod后才删掉一个旧的POD，整个升级过程中最多会有5+1个POD
+      maxSurge: 1   # 升级过程中最多可以比原先设置多出的POD数量
+      # 例如：maxUnavaible=1，则表示Kubernetes整个升级过程中最多会有1个POD处于无法服务的状态
+      maxUnavailable: 1 # 升级过程中最多有多少个POD处于无法提供服务的状态
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.7.9
+          ports:
+            - containerPort: 80

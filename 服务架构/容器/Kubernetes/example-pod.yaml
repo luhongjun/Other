@@ -1,0 +1,54 @@
+---
+# Pod配置说明见：https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/
+
+# Pod 是 Kubernetes 最基本的部署调度单元。
+# 每个 Pod 可以由一个或多个业务容器和一个根容器(Pause 容器)组成。一个 Pod 表示某个应用的一个实例
+apiVersion: v1
+kind: Pod
+
+# metadata配置说明见：https://kubernetes.io/docs/reference/kubernetes-api/common-definitions/object-meta/#ObjectMeta
+metadata:             # 我们定义的 Pod 的一些 meta 信息，比如名称、namespace、标签等等信息
+  name: kube100-site
+  labels:
+    app: web
+
+# Pod的Spec配置说明见：https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#PodSpec
+spec:                 # 包括一些 containers，storage，volumes，或者其他 Kubernetes 需要知道的参数，以及诸如是否在容器失败时重新启动容器的属性。你可以在特定 Kubernetes API 找到完整的 Kubernetes Pod 的属性
+  containers:
+    - name: front-end
+      image: nginx
+      ports:
+        - containerPort: 80
+      lifecycle:
+        - postStart:  # 在容器创建后立即执行。但是，并不能保证钩子将在容器ENTRYPOINT之前运行，因为没有参数传递给处理程序。主要用于资源部署、环境准备等。不过需要注意的是如果钩子花费太长时间以至于不能运行或者挂起， 容器将不能达到running状态。
+            exec:
+              command: [ "/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message" ]
+        - preStop:    # 在容器终止之前立即被调用。它是阻塞的，意味着它是同步的， 所以它必须在删除容器的调用发出之前完成。主要用于优雅关闭应用程序、通知其他系统等。如果钩子在执行期间挂起， Pod阶段将停留在running状态并且永不会达到failed状态
+          exec:
+            command: [ '/bin/sh', '-c', 'echo Hello from the preStop Handler > /usr/share/message' ]
+      livenessProbe:
+        exec:
+          command:
+            - cat
+            - /tmp/healthy
+        initialDelaySeconds: 5  # 每隔5秒执行一次存活探针，也就是每5秒执行一次上面的"cat /tmp/healthy"命令
+        periodSeconds: 5        # 表示在第一次执行探针的时候要等待5秒，这样能够确保我们的容器能够有足够的时间启动起来
+        timeoutSeconds: 15      # 探测超时时间，默认1秒，最小1秒
+        successThreshold: 1     # 探测失败后，最少连续探测成功多少次才被认定为成功。默认是 1，但是如果是`liveness`则必须是 1。最小值是 1
+        failureThreshold: 3     # 探测成功后，最少连续探测失败多少次才被认定为失败。默认是 3，最小值是 1
+      readinessProbe:
+        tcpSocket:
+          port: 8080
+        initialDelaySeconds: 5
+        periodSeconds: 10
+    - name: flaskapp-demo
+      image: jcdemo/flaskapp
+      ports:
+        - containerPort: 5000
+  initContainers:
+    - name: init-myservice
+      image: busybox
+      command: [ 'sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;' ]
+    - name: init-mydb
+      image: busybox
+      command: [ 'sh', '-c', 'until nslookup mydb; do echo waiting for mydb; sleep 2; done;' ]

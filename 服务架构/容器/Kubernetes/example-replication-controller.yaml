@@ -1,0 +1,22 @@
+# ReplicaSet (RS)
+# 随着Kubernetes的高速发展，官方已经推荐我们使用RS和Deployment来代替RC了，实际上RS和RC的功能基本一致，目前唯一的一个区别就是RC只支持基于等式的selector（env=dev或environment!=qa），但RS还支持基于集合的selector（version in (v1.0, v2.0)），这对复杂的运维管理就非常方便了
+apiVersion: v1
+kind: ReplicaSet
+metadata:
+  name: rs-demo
+  labels:
+    name: rs
+spec:
+  replicas: 3     # 指定Pod副本数量，默认为1
+  selector:       # RS通过该属性来筛选要控制的Pod
+    name: rs
+  template:       # Pod的定义的模块，所有标签名称为rs的Pod
+    metadata:
+      labels:
+        name: rs
+    spec:
+      containers:
+        - name: nginx-demo
+          image: nginx
+          ports:
+            - containerPort: 80

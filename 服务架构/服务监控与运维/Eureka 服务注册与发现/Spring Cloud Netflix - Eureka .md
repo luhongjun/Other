@@ -34,7 +34,7 @@ Eureka 运作流程大致是这样的：
 
 Eureka server 是有界面的，配置后可以通过访问页面查看服务注册情况：
 
-![Eureka Service界面](Eureka%20Service界面.png)
+![Eureka Service界面](Eureka Service界面.png)
 
 上图可以看出，有两个服务`APOLLO-ADMINSERVICE`、`APOLLO-CONFIGSERVICE`已经在 Eureka 上注册好了，并且状态是正常的；
 

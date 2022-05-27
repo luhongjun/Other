@@ -1,0 +1,20 @@
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  name: cronjob-demo
+spec:
+  schedule: "*/1 * * * *"           # 指定任务运行的周期，格式就和crontab一样
+  jobTemplate:                      # 指定需要运行的任务
+    spec:
+      successfulJobsHistoryLimit: 2 # 指定保留成功Job的最大数量
+      failedJobsHistoryLimit：4      # 指定保留失败Job的最大数量
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: hello
+              image: busybox
+              args:
+                - "bin/sh"
+                - "-c"
+                - "for i in 9 8 7 6 5 4 3 2 1; do echo $i; done"

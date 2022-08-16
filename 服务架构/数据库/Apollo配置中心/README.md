@@ -22,10 +22,10 @@ Apollo 整体架构如下图：
 - Portal 通过域名访问 Meta Server 获取 Admin Service 服务列表（IP+Port），而后直接通过IP+Port访问服务，同时在Portal 则会做 load balance、错误重试
 - 为了简化部署，我们实际上会把 Config Service、Eureka 和 Meta Server 三个逻辑角色部署在同一个JVM进程中
 
-参考：[微服务架构~携程Apollo配置中心架构剖析](https://mp.weixin.qq.com/s/-hUaQPzfsl9Lm3IqQW3VDQ)
----------------
+## 参考
 
-更多详细资料请参阅[Apollo 中文文档](https://ctripcorp.github.io/apollo/#/zh/README)
+- [Apollo中文文档](https://www.apolloconfig.com/#/zh/README)
+- [微服务架构~携程Apollo配置中心架构剖析](https://mp.weixin.qq.com/s/-hUaQPzfsl9Lm3IqQW3VDQ)
 
 ## 核心概念
 

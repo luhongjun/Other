@@ -4,6 +4,9 @@
 
 - [RabbitMQ 中文文档](http://rabbitmq.mr-ping.com/)
 - [AMQP 0-9-1 Quick Reference](https://www.rabbitmq.com/amqp-0-9-1-quickref.html)
+  
+AMQP（高级消息队列协议）是一个网络协议。它支持符合要求的客户端应用（application）和消息中间件代理（messaging middleware broker）之间进行通信
+
 - [高级消息队列协议 - AMQP(Advanced Message Queuing Protocol)](https://www.amqp.org/)
 - [Go RabbitMQ Client Library](https://pkg.go.dev/github.com/streadway/amqp?utm_source=godoc)
 

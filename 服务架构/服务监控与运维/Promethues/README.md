@@ -1,7 +1,7 @@
 # Prometheus
 
 **参考资料**
-- [Prometheus中文文档]()
+- [Prometheus中文文档]
   - https://www.prometheus.wang/quickstart/
   - https://prometheus.fuckcloudnative.io/
 - [Prometheus英文文档](https://prometheus.io/docs)

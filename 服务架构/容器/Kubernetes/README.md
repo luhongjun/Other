@@ -9,6 +9,10 @@ Kubernetes 是用于自动部署，扩展和管理容器化应用程序的开源
 - [Kubernetes官网文档](https://kubernetes.io/zh/docs/home/)
 - [腾讯课堂 - Kubernetes/K8s 从入门到实战教程](https://ke.qq.com/course/2368264/8879200641753864)
 
+## 快捷文档
+
+- https://github.com/cnych/qikqiak.com/https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19
+
 ## Kubernetes集群架构与组件
 
 ![Kubernetes集群架构与组件](Kubernetes集群架构与组件.jpg)

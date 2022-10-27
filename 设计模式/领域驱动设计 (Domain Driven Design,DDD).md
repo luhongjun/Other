@@ -2,7 +2,6 @@
 
 **推荐阅读**
 
-- [书籍《实现领域驱动设计》, Vaughn Vernon著](../图书资源/实现领域驱动设计_Vaughn%20Vernon著.pdf)
 - [书籍《实现领域驱动设计》总结](https://www.cnblogs.com/davenkin/p/road-to-ddd.html)
 - [事件驱动架构(EDA)编码实践, Thoughtworks洞见](https://insights.thoughtworks.cn/backend-development-eda/)
 - [在微服务中使用领域事件, Thoughtworks洞见](https://insights.thoughtworks.cn/use-domain-events-in-microservices/)

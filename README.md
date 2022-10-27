@@ -3,7 +3,7 @@
 记录开发运维、架构思想等非语言类知识
 
 ## 知识点导航
-
+- Linux系统与运维
 - 服务架构
     - 网关Gateway
         - [Apache APISIX](服务架构/网关Gateway/Apache%20APISIX/README.md)
@@ -35,7 +35,10 @@
             - [《Prometheus内部原理.docx》](服务架构/服务监控与运维/Promethues/Prometheus内部原理.docx)
         - Thanos：简化分布式 Prometheus 的部署与管理，并提供了一些的高级特性：全局视图，长期存储，高可用
             - [《打造云原生大型分布式监控系统-Thanos.docx》](服务架构/服务监控与运维/Thanos/打造云原生大型分布式监控系统-Thanos.docx)
+            - [>> thanos官网文档（英文）](https://thanos.io/v0.29/thanos/getting-started.md/)
     - 消息中间件
         - [Kafka](服务架构/消息中间件/Kafka/README.md)：一个拥有高吞吐、可持久化、可水平扩展，支持流式数据处理等多种特性的分布式消息流处理中间件，采用分布式消息发布与订阅机制，在日志收集、流式数据传输、在线/离线系统分析、实时监控等领域有广泛的应用
         - RabbitMQ
         - ZeroMQ
+- 设计模式
+    - [实现领域驱动设计_Vaughn Vernon著.pdf](设计模式/实现领域驱动设计_Vaughn%20Vernon著.pdf)

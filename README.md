@@ -12,7 +12,7 @@
     - 容器
         - [Docker]()
         - [Kubernetes](服务架构/容器/Kubernetes/README.md)：用于自动部署，扩展和管理容器化应用程序的开源系统
-            - [《Kubernetes进阶训练营.doc》](服务架构/容器/Kubernetes/Kubernetes进阶.docx)（原文教程：https://www.qikqiak.com/k8strain2/）
+            - [《Kubernetes进阶训练营.doc》](服务架构/容器/Kubernetes/Kubernetes进阶.docx)（原文教程：https://www.qikqiak.com/k8strain2/ ）
     - 数据库
         - [Apollo](服务架构/数据库/Apollo配置中心/README.md)：携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景
           - [>> Apollo中文文档](https://www.apolloconfig.com/#/zh/README) 
